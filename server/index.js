@@ -2,9 +2,7 @@ import * as dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
-import cookieParser from 'cookie-parser';
 
-import { checkForAuthCookie } from './middlewares/authentication.js';
 import userRoute from './routes/user.js';
 
 dotenv.config();
@@ -14,8 +12,7 @@ const PORT = process.env.PORT || 8000;
 
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(checkForAuthCookie("token"));
+app.use(express.json({ limit: '50mb' }));
 
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log("MongoDB connected"));

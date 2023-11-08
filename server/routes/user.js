@@ -4,41 +4,27 @@ import User from '../models/user.js';
 const router = Router();
 
 router.get("/signup", (req, res) => {
-    res.send("SignUp page");
+    res.send("Sign Up Page");
 });
 
 router.post("/signup", async (req, res) => {
-    const { username, password } = req.body;
-
     try {
+        const { username, password, sleepGoal, sleepProblemDuration } = req.body;
+
         if (await User.findOne({ username }))
             return res.status(400).json({ success: false, message: "username already exists" });
 
-        await User.create({
+        const userInfo = await User.create({
             username,
-            password
+            password,
+            sleepGoal,
+            sleepProblemDuration
         });
 
-        return res.status(200).json({ success: true, message: `Welcome ${username} to Wysa` });
+        return res.status(200).json({ success: true, data: userInfo });
     } catch (error) {
-        return res.status(400).json({ success: false, message: "Please enter username and password" });
+        return res.status(400).json({ success: false, message: error.message });
     }
 });
-
-/*
-router.post("/signin", async (req, res) => {
-    const { username, password } = req.body;
-
-    try {
-        const token = await User.matchPasswordAndGenerateToken(username, password);
-        // console.log("Token: ", token)
-
-        // return res.cookie("token", token).status(200).json({ success: true, message: `Welcome ${username} to Wysa` });
-        return res.status(200).json({ success: true, message: `Welcome ${username} to Wysa` });
-    } catch (error) {
-        return res.status(400).json({ success: false, message: "Incorrect username or password" });
-    }
-});
-*/
 
 export default router;

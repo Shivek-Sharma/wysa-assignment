@@ -13,29 +13,40 @@ router.get("/signin", (req, res) => {
     res.send("Sign In Page");
 });
 
-//endpoint for checking uniqueness of username
-router.post("/check", async (req, res) => {
+//endpoint for sign up
+router.post("/signup", async (req, res) => {
     try {
-        const { username } = req.body;
+        const { username, password } = req.body;
 
+        // unique username check
         if (await User.findOne({ username }))
             throw new Error("this username already exists");
 
-        return res.status(200).json({ success: true, message: "this username doesn't exists" });
+        await User.create({
+            username,
+            password
+        });
+
+        return res.status(200).json({ success: true, message: "user registered successfully" });
     } catch (error) {
         return res.status(400).json({ success: false, message: error.message });
     }
 });
 
-//endpoint for signup of a new user with his/her sleep data
-router.post("/signup", async (req, res) => {
+//endpoint for storing sleep data of a user
+router.post("/sleepdata", async (req, res) => {
     try {
         const { username, password, sleepGoal, sleepProblemDuration } = req.body;
 
-        const user = await User.create({
-            username,
-            password
-        });
+        const user = await User.findOne({ username });
+
+        // preventing storage of sleep data if the corresponding user doesn't exist 
+        if (!user)
+            throw new Error("User not found");
+
+        // preventing duplicacy of sleep data for a user
+        if (await SleepData.findOne({ userDetails: user._id }))
+            throw new Error("Sleep data for this user already exists");
 
         const userInfo = await SleepData.create({
             sleepGoal,

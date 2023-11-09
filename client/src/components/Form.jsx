@@ -24,19 +24,19 @@ function Form() {
         } else if (page === 2) {
             return <ScreenTwo formData={formData} setFormData={setFormData} />
         } else {
-            return <ScreenFinal />
+            return <ScreenFinal formData={formData} />
         }
     };
 
-    const isUniqueUsername = async () => {
+    const handleSignUp = async () => {
         if (formData.username && formData.password) {
             try {
-                const response = await fetch('http://localhost:8000/user/check', {
+                const response = await fetch('http://localhost:8000/user/signup', {
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify({ username: formData.username })
+                    body: JSON.stringify({ username: formData.username, password: formData.password })
                 });
 
                 const data = await response.json();
@@ -68,7 +68,7 @@ function Form() {
 
     const handleFormSubmit = async () => {
         try {
-            const response = await fetch('http://localhost:8000/user/signup', {
+            const response = await fetch('http://localhost:8000/user/sleepdata', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json'
@@ -80,7 +80,10 @@ function Form() {
             const data = await response.json();
             // console.log(data);
 
-            setPage((prev) => prev + 1);
+            if (response.ok)
+                setPage((prev) => prev + 1);
+            else
+                alert(data.message);
         } catch (error) {
             console.log(error.message);
         }
@@ -106,7 +109,7 @@ function Form() {
 
                         <button
                             className="m-5 py-2 px-4 bg-blue-500 text-white"
-                            onClick={page === 0 ? isUniqueUsername : handleNext}
+                            onClick={page === 0 ? handleSignUp : handleNext}
                         >
                             {page === formTitles.length - 1 ? "Submit" : "Next"}
                         </button>

@@ -12,14 +12,6 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true
-    },
-    sleepGoal: {
-        type: String,
-        required: true
-    },
-    sleepProblemDuration: {
-        type: String,
-        required: true
     }
 }
 );
@@ -38,6 +30,22 @@ userSchema.pre("save", function (next) {
     this.password = hashedPassword;
 
     next();
+});
+
+userSchema.static("matchPassword", async function (username, password) {
+    const user = await this.findOne({ username });
+    if (!user) throw new Error("User not found!");
+
+    const salt = user.salt;
+    const hashedPassword = user.password;
+
+    const userProvidedHash = createHmac('sha256', salt)
+        .update(password)
+        .digest('hex');
+
+    if (hashedPassword !== userProvidedHash) throw new Error("Incorrect password!");
+
+    return user;
 });
 
 const User = model("User", userSchema);

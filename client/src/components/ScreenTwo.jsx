@@ -6,21 +6,19 @@ function Screentwo({ formData, setFormData }) {
     }
 
     return (
-        <div>
-            <h2>That's a great goal. How long have you been struggling with your sleep?</h2><br />
+        <div className="p-3">
+            <h2 className="block text-xl font-medium">That's a great goal. How long have you been struggling with your sleep?</h2>
 
-            <input type="radio" name="sleep_problem_duration" value="One" onChange={onOptionChange} checked={formData.sleepProblemDuration === "One"} />
-            <label htmlFor="one">Less than 2 weeks</label><br />
+            <div className="mt-5">
+                <input type="radio" name="sleep_problem_duration" value="One" onChange={onOptionChange} checked={formData.sleepProblemDuration === "One"} className="w-4 h-4 mr-3 my-3" />
+                <label htmlFor="one" className="w-full text-xl">Less than 2 weeks</label><br />
 
-            <input type="radio" name="sleep_problem_duration" value="Two" onChange={onOptionChange} checked={formData.sleepProblemDuration === "Two"} />
-            <label htmlFor="two">2 to 8 weeks</label><br />
+                <input type="radio" name="sleep_problem_duration" value="Two" onChange={onOptionChange} checked={formData.sleepProblemDuration === "Two"} className="w-4 h-4 mr-3 my-3" />
+                <label htmlFor="two" className="w-full text-xl">2 to 8 weeks</label><br />
 
-            <input type="radio" name="sleep_problem_duration" value="Three" onChange={onOptionChange} checked={formData.sleepProblemDuration === "Three"} />
-            <label htmlFor="three">More than 8 weeks</label>
-
-            <p>
-                You selected option: <strong>{formData.sleepProblemDuration}</strong>
-            </p>
+                <input type="radio" name="sleep_problem_duration" value="Three" onChange={onOptionChange} checked={formData.sleepProblemDuration === "Three"} className="w-4 h-4 mr-3 my-3" />
+                <label htmlFor="three" className="w-full text-xl">More than 8 weeks</label>
+            </div>
         </div>
     )
 }
